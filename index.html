@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Smartech Garden</title>
-  <link rel="stylesheet" href="assets/cs/style.css">
-  <link rel="stylesheet" href="assets/cs/style.css">
-  <link rel="icon" href="assets/images/icon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-  <script defer src="assets/js/script.js"></script>
+
+  <!-- Styles -->
+  <link rel="icon" href="assets/image/icon_utama.jpg" />
+  <link rel="stylesheet" href="assets/cs/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Scripts -->
   <script defer src="assets/js/script.js"></script>
 </head>
 <body>
@@ -23,6 +28,34 @@
     <div class="scroll-indicator" data-i18n="scroll">Scroll to discover more ↓</div>
   </header>
 
+  <section class="realtime-monitor">
+    <h2>Live Sensor Data</h2>
+    <div class="sensor-grid">
+      <div class="sensor-box">
+        <h3>Soil Moisture</h3>
+        <p id="moisture">-- %</p>
+      </div>
+      <div class="sensor-box">
+        <h3>Temperature</h3>
+        <p id="temperature">-- °C</p>
+      </div>
+      <div class="sensor-box">
+        <h3>Pump Status</h3>
+        <p id="pump-status">--</p>
+      </div>
+    </div>
+    <div class="chart-section">
+      <canvas id="moistureChart" width="400" height="150"></canvas>
+      <canvas id="tempChart" width="400" height="150"></canvas>
+    </div>
+  </section>
+
+  <section class="controls">
+    <h2>Pump Controls</h2>
+    <button onclick="controlPump('on')">Turn On Pump</button>
+    <button onclick="controlPump('off')">Turn Off Pump</button>
+  </section>
+
   <section class="about" id="about">
     <h2 data-i18n="aboutTitle">About the App</h2>
     <p data-i18n="aboutDesc">
@@ -34,25 +67,25 @@
     <h2 data-i18n="featuresTitle">Features</h2>
     <div class="grid">
       <div class="card aos-init interactive" data-aos="fade-up">
-        <img src="assets/image/icon_soilmoisture.jpg" alt="Soil Moisture" class="icon previewable"/>
+        <img src="assets/image/icon_soilmoisture.jpg" alt="Soil Moisture" class="icon previewable" />
         <h3 data-i18n="feature1">Soil Moisture Monitoring</h3>
         <p data-i18n="featureDesc1">Real-time soil moisture detection with smart alerts.</p>
       </div>
 
       <div class="card aos-init interactive" data-aos="fade-up" data-aos-delay="150">
-        <img src="assets/image/icon_pumpcontrol.jpg" alt="Pump Control" class="icon previewable"/>
+        <img src="assets/image/icon_pumpcontrol.jpg" alt="Pump Control" class="icon previewable" />
         <h3 data-i18n="feature2">Manual Pump Control</h3>
         <p data-i18n="featureDesc2">Turn on the water pump remotely with one tap.</p>
       </div>
 
       <div class="card aos-init interactive" data-aos="fade-up" data-aos-delay="300">
-        <img src="assets/image/icon_autowatering.jpg" alt="Auto Watering" class="icon previewable"/>
+        <img src="assets/image/icon_autowatering.jpg" alt="Auto Watering" class="icon previewable" />
         <h3 data-i18n="feature3">Automatic Watering</h3>
         <p data-i18n="featureDesc3">Schedule watering times or let the system decide when your plants need it.</p>
       </div>
 
       <div class="card aos-init interactive" data-aos="fade-up" data-aos-delay="450">
-        <img src="assets/image/icon_dashboard.jpg" alt="Dashboard" class="icon previewable"/>
+        <img src="assets/image/icon_dashboard.jpg" alt="Dashboard" class="icon previewable" />
         <h3 data-i18n="feature4">Interactive Dashboard</h3>
         <p data-i18n="featureDesc4">Visualize your garden's condition with clean and clear UI.</p>
       </div>
@@ -62,22 +95,23 @@
   <section class="mockup">
     <h2 data-i18n="mockupTitle">App Interface Preview</h2>
     <div class="mockup-images">
-      <img src="assets/image/dashboard_web.png" alt="Mockup 1" class="fade-in-left">
-      <img src="assets/image/about_web.png" alt="Mockup 2" class="fade-in-right">
-      <img src="assets/image/features_web.png" alt="Mockup 3" class="fade-in-left">
-      <img src="assets/image/mockup_web.jpg" alt="Mockup 4" class="fade-in-right">
+      <img src="assets/image/dashboard_web.png" alt="Mockup 1" class="fade-in-left previewable" />
+      <img src="assets/image/about_web.png" alt="Mockup 2" class="fade-in-right previewable" />
+      <img src="assets/image/features_web.png" alt="Mockup 3" class="fade-in-left previewable" />
+      <img src="assets/image/mockup_web.jpg" alt="Mockup 4" class="fade-in-right previewable" />
     </div>
   </section>
 
   <footer class="footer">
     <p>&copy; 2025 SmartechGarden Fazila Zaki Ahmad. All rights reserved.</p>
-    <p><a href="https://smartechgarden-zackcode46.com/blue-modern-mobile-application-presentation-situs-web">About</a> | <a href="#features">Features</a> | <a href="https://wa.me/089653720025">Contact</a></p>
+    <p><a href="https://preview.canva.site/4538b9a0-3c3f-4713-9b2b-bb34e801461d/smartechgarden-zackcode46.com/blue-modern-mobile-application-presentation-situs-web">About</a> | <a href="#features">Features</a> | <a href="https://wa.me/089653720025">Contact</a></p>
   </footer>
 
-  <!-- Lightbox for interactive image view -->
+  <!-- Lightbox container -->
   <div id="lightbox" class="lightbox hidden">
     <span class="close-btn">&times;</span>
     <img src="" alt="Preview" class="lightbox-img" />
   </div>
 </body>
 </html>
+

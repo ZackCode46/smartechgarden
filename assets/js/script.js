@@ -49,6 +49,56 @@ langSwitcher.addEventListener("change", (e) => {
   });
 });
 
+// Chart.js Setup
+const moistureCtx = document.getElementById('moistureChart').getContext('2d');
+const tempCtx = document.getElementById('tempChart').getContext('2d');
+
+const moistureChart = new Chart(moistureCtx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      label: 'Soil Moisture (%)',
+      data: [],
+      borderColor: '#27ae60',
+      backgroundColor: 'rgba(39, 174, 96, 0.2)',
+      tension: 0.4
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100
+      }
+    }
+  }
+});
+
+const tempChart = new Chart(tempCtx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      label: 'Temperature (°C)',
+      data: [],
+      borderColor: '#2980b9',
+      backgroundColor: 'rgba(52, 152, 219, 0.2)',
+      tension: 0.4
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        suggestedMax: 50
+      }
+    }
+  }
+});
+
 // Lightbox Image Script
 const lightbox = document.createElement('div');
 lightbox.classList.add('lightbox', 'hidden');
@@ -80,3 +130,59 @@ lightbox.addEventListener('click', (e) => {
     lightbox.classList.add('hidden');
   }
 });
+
+// ESP Integration: Fetch Sensor Data
+const moistureEl = document.getElementById("moisture");
+const tempEl = document.getElementById("temperature");
+const pumpStatusEl = document.getElementById("pump-status");
+
+function updateSensor(el, value) {
+  el.textContent = value;
+  el.classList.add("blink");
+  setTimeout(() => el.classList.remove("blink"), 500);
+}
+
+function addChartData(chart, value) {
+  const now = new Date();
+  const timeLabel = now.toLocaleTimeString();
+  chart.data.labels.push(timeLabel);
+  chart.data.datasets[0].data.push(value);
+  if (chart.data.labels.length > 10) {
+    chart.data.labels.shift();
+    chart.data.datasets[0].data.shift();
+  }
+  chart.update();
+}
+
+async function fetchSensorData() {
+  try {
+    const res = await fetch("http://192.168.4.1/data"); // Ganti IP sesuai ESP
+    const data = await res.json();
+
+    updateSensor(moistureEl, data.moisture + "%");
+    updateSensor(tempEl, data.temperature + "°C");
+    pumpStatusEl.textContent = data.pump === "on" ? "ON" : "OFF";
+    pumpStatusEl.style.color = data.pump === "on" ? "#27ae60" : "#c0392b";
+
+    addChartData(moistureChart, data.moisture);
+    addChartData(tempChart, data.temperature);
+  } catch (err) {
+    console.error("Fetch failed:", err);
+    moistureEl.textContent = "-- %";
+    tempEl.textContent = "-- °C";
+    pumpStatusEl.textContent = "--";
+  }
+}
+
+setInterval(fetchSensorData, 3000);
+
+window.controlPump = async (action) => {
+  try {
+    const res = await fetch(`http://192.168.4.1/pump/${action}`);
+    const result = await res.text();
+    alert(result);
+    fetchSensorData();
+  } catch (err) {
+    alert("Command failed");
+  }
+};
