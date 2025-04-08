@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smartech Garden</title>
+  <link rel="stylesheet" href="assets/cs/style.css">
+  <link rel="stylesheet" href="assets/cs/style.css">
+  <link rel="icon" href="assets/images/icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <script defer src="assets/js/script.js"></script>
+  <script defer src="assets/js/script.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <h1 class="title" data-i18n="welcome">Welcome to Smartech Garden</h1>
+    <p class="subtitle" data-i18n="subtitle">Smart Farming for Modern Living</p>
+    <a href="#features" class="btn" data-i18n="explore">Explore Features</a>
+    <select id="langSwitcher">
+      <option value="en">English</option>
+      <option value="id">Bahasa</option>
+    </select>
+    <div class="scroll-indicator" data-i18n="scroll">Scroll to discover more ↓</div>
+  </header>
+
+  <section class="about" id="about">
+    <h2 data-i18n="aboutTitle">About the App</h2>
+    <p data-i18n="aboutDesc">
+      Smartech Garden helps you automate your garden with real-time monitoring and smart features to ensure your plants stay healthy.
+    </p>
+  </section>
+
+  <section class="features" id="features">
+    <h2 data-i18n="featuresTitle">Features</h2>
+    <div class="grid">
+      <div class="card aos-init interactive" data-aos="fade-up">
+        <img src="assets/image/icon_soilmoisture.jpg" alt="Soil Moisture" class="icon previewable"/>
+        <h3 data-i18n="feature1">Soil Moisture Monitoring</h3>
+        <p data-i18n="featureDesc1">Real-time soil moisture detection with smart alerts.</p>
+      </div>
+
+      <div class="card aos-init interactive" data-aos="fade-up" data-aos-delay="150">
+        <img src="assets/image/icon_pumpcontrol.jpg" alt="Pump Control" class="icon previewable"/>
+        <h3 data-i18n="feature2">Manual Pump Control</h3>
+        <p data-i18n="featureDesc2">Turn on the water pump remotely with one tap.</p>
+      </div>
+
+      <div class="card aos-init interactive" data-aos="fade-up" data-aos-delay="300">
+        <img src="assets/image/icon_autowatering.jpg" alt="Auto Watering" class="icon previewable"/>
+        <h3 data-i18n="feature3">Automatic Watering</h3>
+        <p data-i18n="featureDesc3">Schedule watering times or let the system decide when your plants need it.</p>
+      </div>
+
+      <div class="card aos-init interactive" data-aos="fade-up" data-aos-delay="450">
+        <img src="assets/image/icon_dashboard.jpg" alt="Dashboard" class="icon previewable"/>
+        <h3 data-i18n="feature4">Interactive Dashboard</h3>
+        <p data-i18n="featureDesc4">Visualize your garden's condition with clean and clear UI.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mockup">
+    <h2 data-i18n="mockupTitle">App Interface Preview</h2>
+    <div class="mockup-images">
+      <img src="assets/image/dashboard_web.png" alt="Mockup 1" class="fade-in-left">
+      <img src="assets/image/about_web.png" alt="Mockup 2" class="fade-in-right">
+      <img src="assets/image/features_web.png" alt="Mockup 3" class="fade-in-left">
+      <img src="assets/image/mockup_web.jpg" alt="Mockup 4" class="fade-in-right">
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2025 SmartechGarden Fazila Zaki Ahmad. All rights reserved.</p>
+    <p><a href="https://smartechgarden-zackcode46.com/blue-modern-mobile-application-presentation-situs-web">About</a> | <a href="#features">Features</a> | <a href="https://wa.me/089653720025">Contact</a></p>
+  </footer>
+
+  <!-- Lightbox for interactive image view -->
+  <div id="lightbox" class="lightbox hidden">
+    <span class="close-btn">&times;</span>
+    <img src="" alt="Preview" class="lightbox-img" />
+  </div>
+</body>
+</html>
