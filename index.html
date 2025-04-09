@@ -7,7 +7,7 @@
 
   <!-- Styles -->
   <link rel="icon" href="assets/image/icon_utama.jpg" />
-  <link rel="stylesheet" href="assets/cs/style.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
 
   <!-- Chart.js CDN -->
@@ -52,9 +52,14 @@
 
   <section class="controls">
     <h2>Pump Controls</h2>
-    <button onclick="controlPump('on')">Turn On Pump</button>
-    <button onclick="controlPump('off')">Turn Off Pump</button>
-  </section>
+    <div class="pump-indicator">
+      <span id="pump-indicator-text">Pump Status: --</span>
+    </div>
+    <div class="pump-buttons">
+      <button class="pump-btn on" onclick="controlPump('on')">💧 Turn On Pump</button>
+      <button class="pump-btn off" onclick="controlPump('off')">💤 Turn Off Pump</button>
+    </div>
+  </section>  
 
   <section class="about" id="about">
     <h2 data-i18n="aboutTitle">About the App</h2>
@@ -104,7 +109,7 @@
 
   <footer class="footer">
     <p>&copy; 2025 SmartechGarden Fazila Zaki Ahmad. All rights reserved.</p>
-    <p><a href="https://preview.canva.site/4538b9a0-3c3f-4713-9b2b-bb34e801461d/smartechgarden-zackcode46.com/blue-modern-mobile-application-presentation-situs-web">About</a> | <a href="#features">Features</a> | <a href="https://wa.me/089653720025">Contact</a></p>
+    <p><a href="https://preview.canva.site/2bae4f2a-64fa-476d-8a09-6f4b602eb697/smartechgarden-zackcode46.com/blue-modern-mobile-application-presentation-situs-web">About</a> | <a href="#features">Features</a> | <a href="https://wa.me/6289658720025">Contact</a></p>
   </footer>
 
   <!-- Lightbox container -->

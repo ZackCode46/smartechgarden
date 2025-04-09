@@ -172,21 +172,54 @@ footer.footer a:hover {
   100% {opacity: 0.5; transform: scale(1.1);}
 }
 
-.controls button {
-  background-color: #27ae60;
-  color: #fff;
+.controls {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.pump-indicator {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.pump-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.pump-btn {
   font-size: 1rem;
   padding: 12px 25px;
-  margin: 10px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.controls button:hover {
+.pump-btn.on {
+  background-color: #27ae60;
+  color: #fff;
+}
+
+.pump-btn.on:hover {
   background-color: #2ecc71;
-  transform: translateY(-2px);
+  transform: scale(1.05);
+}
+
+.pump-btn.off {
+  background-color: #c0392b;
+  color: #fff;
+}
+
+.pump-btn.off:hover {
+  background-color: #e74c3c;
+  transform: scale(1.05);
 }
 
 .chart-section {
@@ -261,4 +294,24 @@ footer.footer a:hover {
   }
 }
 
+/* Animasi tanaman di header */
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 100px;
+  background-image: url('../image/erasebg-transformed.webp');
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: sway 3s ease-in-out infinite;
+  opacity: 0.8;
+}
 
+@keyframes sway {
+  0% { transform: translateX(-50%) rotate(-3deg); }
+  50% { transform: translateX(-50%) rotate(3deg); }
+  100% { transform: translateX(-50%) rotate(-3deg); }
+}

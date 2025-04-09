@@ -1,5 +1,159 @@
-// Language Switcher
-const langSwitcher = document.getElementById("langSwitcher");
+
+// ===============================
+// Smartech Garden Main Script
+// ===============================
+
+const moistureEl = document.getElementById("moisture");
+const tempEl = document.getElementById("temperature");
+const pumpStatusEl = document.getElementById("pump-status");
+const pumpIndicator = document.getElementById("pump-indicator-text");
+
+const moistureChartCtx = document.getElementById("moistureChart").getContext("2d");
+const tempChartCtx = document.getElementById("tempChart").getContext("2d");
+
+let moistureData = [];
+let tempData = [];
+let timeLabels = [];
+
+const maxDataPoints = 10;
+
+// Chart.js Setup
+const moistureChart = new Chart(moistureChartCtx, {
+  type: "line",
+  data: {
+    labels: timeLabels,
+    datasets: [{
+      label: "Soil Moisture (%)",
+      data: moistureData,
+      borderColor: "#27ae60",
+      tension: 0.4,
+      fill: false
+    }]
+  },
+  options: {
+    scales: {
+      y: { beginAtZero: true, max: 100 }
+    }
+  }
+});
+
+const tempChart = new Chart(tempChartCtx, {
+  type: "line",
+  data: {
+    labels: timeLabels,
+    datasets: [{
+      label: "Temperature (°C)",
+      data: tempData,
+      borderColor: "#e67e22",
+      tension: 0.4,
+      fill: false
+    }]
+  },
+  options: {
+    scales: {
+      y: { beginAtZero: true, max: 60 }
+    }
+  }
+});
+
+// Fetch sensor data
+async function fetchSensorData() {
+  try {
+    const res = await fetch("http://192.168.4.1/sensor");
+    const data = await res.json();
+
+    const moisture = data.moisture;
+    const temp = data.temperature;
+    const pumpStatus = data.pump;
+
+    const time = new Date().toLocaleTimeString();
+
+    updateValue(moistureEl, moisture + " %");
+    updateValue(tempEl, temp + " °C");
+    updateValue(pumpStatusEl, pumpStatus.toUpperCase());
+
+    updatePumpIndicator(pumpStatus);
+    updateCharts(time, moisture, temp);
+
+    // Alerts
+    if (moisture < 30) showToast("Soil too dry! 💧", "warn");
+    if (temp > 40) showToast("Temp too high! 🔥", "warn");
+
+  } catch (err) {
+    showToast("Failed to fetch sensor data", "error");
+    console.error(err);
+  }
+}
+
+// Update DOM element with blink animation
+function updateValue(el, newValue) {
+  if (el.textContent !== newValue) {
+    el.textContent = newValue;
+    el.classList.add("blink");
+    setTimeout(() => el.classList.remove("blink"), 1000);
+  }
+}
+
+// Update pump status indicator
+function updatePumpIndicator(status) {
+  if (!pumpIndicator) return;
+  pumpIndicator.textContent = "Pump Status: " + status.toUpperCase();
+  pumpIndicator.style.color = status === "on" ? "#27ae60" : "#c0392b";
+}
+
+// Update Charts
+function updateCharts(time, moisture, temp) {
+  timeLabels.push(time);
+  moistureData.push(moisture);
+  tempData.push(temp);
+
+  if (timeLabels.length > maxDataPoints) {
+    timeLabels.shift();
+    moistureData.shift();
+    tempData.shift();
+  }
+
+  moistureChart.update();
+  tempChart.update();
+}
+
+// Control pump
+window.controlPump = async (action) => {
+  try {
+    const res = await fetch("http://192.168.4.1/pump/" + action);
+    const result = await res.text();
+
+    showToast("Pump turned " + action, "success");
+    fetchSensorData();
+  } catch (err) {
+    showToast("Failed to control pump", "error");
+  }
+};
+
+// Toast notification
+function showToast(message, type = "success") {
+  const toast = document.createElement("div");
+  toast.className = "toast toast-" + type;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// Lang switcher
+document.getElementById("langSwitcher")?.addEventListener("change", (e) => {
+  const lang = e.target.value;
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    el.textContent = translations[lang][key] || key;
+  });
+});
+
+// Simple translation
 const translations = {
   en: {
     welcome: "Welcome to Smartech Garden",
@@ -21,168 +175,24 @@ const translations = {
   },
   id: {
     welcome: "Selamat datang di Smartech Garden",
-    subtitle: "Pertanian Pintar untuk Kehidupan Modern",
+    subtitle: "Berkebun Pintar untuk Hidup Modern",
     explore: "Jelajahi Fitur",
-    scroll: "Gulir untuk temukan lebih banyak ↓",
+    scroll: "Gulir untuk melihat lebih banyak ↓",
     aboutTitle: "Tentang Aplikasi",
-    aboutDesc: "Smartech Garden membantu mengotomatiskan kebun Anda dengan pemantauan waktu nyata dan fitur pintar agar tanaman Anda tetap sehat.",
+    aboutDesc: "Smartech Garden membantu kamu mengotomatiskan kebun dengan pemantauan waktu nyata dan fitur pintar agar tanaman tetap sehat.",
     featuresTitle: "Fitur",
     feature1: "Pemantauan Kelembaban Tanah",
     featureDesc1: "Deteksi kelembaban tanah secara real-time dengan peringatan pintar.",
     feature2: "Kontrol Pompa Manual",
-    featureDesc2: "Nyalakan pompa air dari jarak jauh dengan satu ketukan.",
+    featureDesc2: "Nyalakan pompa air dari jarak jauh hanya dengan satu sentuhan.",
     feature3: "Penyiraman Otomatis",
-    featureDesc3: "Jadwalkan waktu penyiraman atau biarkan sistem memutuskan kapan tanaman Anda membutuhkannya.",
+    featureDesc3: "Atur jadwal penyiraman atau biarkan sistem yang menentukan.",
     feature4: "Dasbor Interaktif",
-    featureDesc4: "Visualisasikan kondisi kebun Anda dengan antarmuka yang bersih dan jelas.",
+    featureDesc4: "Visualisasikan kondisi kebun kamu dengan UI yang bersih dan jelas.",
     mockupTitle: "Pratinjau Antarmuka Aplikasi"
   }
 };
 
-langSwitcher.addEventListener("change", (e) => {
-  const lang = e.target.value;
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.getAttribute("data-i18n");
-    if (translations[lang][key]) {
-      el.textContent = translations[lang][key];
-    }
-  });
-});
-
-// Chart.js Setup
-const moistureCtx = document.getElementById('moistureChart').getContext('2d');
-const tempCtx = document.getElementById('tempChart').getContext('2d');
-
-const moistureChart = new Chart(moistureCtx, {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [{
-      label: 'Soil Moisture (%)',
-      data: [],
-      borderColor: '#27ae60',
-      backgroundColor: 'rgba(39, 174, 96, 0.2)',
-      tension: 0.4
-    }]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true,
-        max: 100
-      }
-    }
-  }
-});
-
-const tempChart = new Chart(tempCtx, {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [{
-      label: 'Temperature (°C)',
-      data: [],
-      borderColor: '#2980b9',
-      backgroundColor: 'rgba(52, 152, 219, 0.2)',
-      tension: 0.4
-    }]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true,
-        suggestedMax: 50
-      }
-    }
-  }
-});
-
-// Lightbox Image Script
-const lightbox = document.createElement('div');
-lightbox.classList.add('lightbox', 'hidden');
-document.body.appendChild(lightbox);
-
-const img = document.createElement('img');
-img.classList.add('lightbox-img');
-lightbox.appendChild(img);
-
-const closeBtn = document.createElement('div');
-closeBtn.classList.add('close-btn');
-closeBtn.innerHTML = '&times;';
-lightbox.appendChild(closeBtn);
-
-const mockupImgs = document.querySelectorAll('.mockup-images img');
-mockupImgs.forEach(image => {
-  image.addEventListener('click', () => {
-    img.src = image.src;
-    lightbox.classList.remove('hidden');
-  });
-});
-
-closeBtn.addEventListener('click', () => {
-  lightbox.classList.add('hidden');
-});
-
-lightbox.addEventListener('click', (e) => {
-  if (e.target === lightbox || e.target === closeBtn) {
-    lightbox.classList.add('hidden');
-  }
-});
-
-// ESP Integration: Fetch Sensor Data
-const moistureEl = document.getElementById("moisture");
-const tempEl = document.getElementById("temperature");
-const pumpStatusEl = document.getElementById("pump-status");
-
-function updateSensor(el, value) {
-  el.textContent = value;
-  el.classList.add("blink");
-  setTimeout(() => el.classList.remove("blink"), 500);
-}
-
-function addChartData(chart, value) {
-  const now = new Date();
-  const timeLabel = now.toLocaleTimeString();
-  chart.data.labels.push(timeLabel);
-  chart.data.datasets[0].data.push(value);
-  if (chart.data.labels.length > 10) {
-    chart.data.labels.shift();
-    chart.data.datasets[0].data.shift();
-  }
-  chart.update();
-}
-
-async function fetchSensorData() {
-  try {
-    const res = await fetch("http://192.168.4.1/data"); // Ganti IP sesuai ESP
-    const data = await res.json();
-
-    updateSensor(moistureEl, data.moisture + "%");
-    updateSensor(tempEl, data.temperature + "°C");
-    pumpStatusEl.textContent = data.pump === "on" ? "ON" : "OFF";
-    pumpStatusEl.style.color = data.pump === "on" ? "#27ae60" : "#c0392b";
-
-    addChartData(moistureChart, data.moisture);
-    addChartData(tempChart, data.temperature);
-  } catch (err) {
-    console.error("Fetch failed:", err);
-    moistureEl.textContent = "-- %";
-    tempEl.textContent = "-- °C";
-    pumpStatusEl.textContent = "--";
-  }
-}
-
+// Fetch data every 3s
 setInterval(fetchSensorData, 3000);
-
-window.controlPump = async (action) => {
-  try {
-    const res = await fetch(`http://192.168.4.1/pump/${action}`);
-    const result = await res.text();
-    alert(result);
-    fetchSensorData();
-  } catch (err) {
-    alert("Command failed");
-  }
-};
+fetchSensorData();
